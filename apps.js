@@ -15,6 +15,12 @@ let currentTicketPrice = localStorage.getItem("selectedMoviePrice") ? localStora
 let currentMovieIndex = localStorage.getItem("selectedMovieIndex") ? localStorage.getItem("selectedMovieIndex") : movieSelectBox.selectedIndex;
 
 
+window.onload = () =>{
+    displaySeats();
+    updateMovieInfo();
+}
+
+//change film and localStorage
 movieSelectBox.addEventListener("change", (e)=>{
     let ticketPrice = e.target.value;
     let movieIndex = e.target.selectedIndex;
@@ -23,24 +29,23 @@ movieSelectBox.addEventListener("change", (e)=>{
     setMovieDataToLocalStorage(ticketPrice, movieIndex);
 });
 
-
+//add to storage
 const setMovieDataToLocalStorage = (ticketPrice, movieIndex) => {
     localStorage.setItem("selectedMovieIndex", movieIndex);
     localStorage.setItem("selectedMoviePrice", ticketPrice);
 };
 
-
+//capturing
 container.addEventListener("click", (e)=>{
     console.log(e.target.classList);
     if(e.target.classList.contains("seat") && !e.target.classList.contains("occupied")){
         e.target.classList.toggle("selected");
         console.log(e.target.classList);
     }
-
     updateMovieInfo();
 });
 
-
+//update paragraph and calculation
 const updateMovieInfo = () =>{
     let selectedSeats = document.querySelectorAll(".row .seat.selected");
 
@@ -54,3 +59,16 @@ const updateMovieInfo = () =>{
 };
 
 
+//after refresh get selectedSeats and add class "selected"
+const displaySeats = () =>{
+    movieSelectBox.selectedIndex = currentMovieIndex;
+    let selectedSeatsFromStorage = JSON.parse(localStorage.getItem("selectedSeats"));
+    console.log(selectedSeatsFromStorage);
+    if(selectedSeatsFromStorage !== null && selectedSeatsFromStorage.length > 0){
+        allSeats.forEach((seat, index)=>{
+            if(selectedSeatsFromStorage.indexOf(index) > -1){
+                seat.classList.add("selected");
+            }
+        })
+    }
+};
